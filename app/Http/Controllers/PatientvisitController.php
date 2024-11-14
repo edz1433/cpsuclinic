@@ -24,6 +24,7 @@ class PatientvisitController extends Controller
         $patients = Patients::select('id', 'fname', 'lname', 'mname')->get();
         return response()->json(['data' => $patients]);
     }
+
     public function addPatient(Request $request){
       
         $patient = new Patientvisit();
@@ -51,8 +52,6 @@ class PatientvisitController extends Controller
         return redirect()->back()->with('success', 'Added Successfully');
     }
     public function visitSearch(Request $request, $id){
-
-        $adds=Patients::all();
         $date = date('Y-m-d');
         date_default_timezone_set('Asia/Manila');
 
@@ -76,7 +75,7 @@ class PatientvisitController extends Controller
         }
 
         $patientVisit = Patientvisit::where('stid', $id)->get();
-        return view('patientvisit.patientvisit_list', compact('patients','patientSearch','patientVisit', 'meddata','quantity','files','adds','date'));
+        return view('patientvisit.patientvisit_list', compact('patients','patientSearch','patientVisit', 'meddata','quantity','files','date'));
     }
     public function patienttrans($id){
         $complaints =  Complaint::all();
