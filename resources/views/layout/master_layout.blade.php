@@ -954,7 +954,7 @@ $(document).ready(function() {
                     var moreInfoUrl = "{{ route('moreInfo', ['id' => ':category', 'mid' => ':id']) }}".replace(':category', row.category).replace(':id', data);
                     var fileReadUrl = "{{ route('fileRead', ['cat' => ':category', 'id' => ':id']) }}".replace(':category', row.category).replace(':id', data);
                     var reportsReadUrl = "{{ route('reportsRead', ':id') }}".replace(':id', data);
-
+                    
                     return `
                         <div class="btn-group">
                             <a href="${moreInfoUrl}" class="mr-1 btn btn-info btn-sm text-light" title="More Info">
