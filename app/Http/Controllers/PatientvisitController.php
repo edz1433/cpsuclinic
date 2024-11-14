@@ -13,14 +13,12 @@ use DB;
 class PatientvisitController extends Controller
 {
     public function patientvisitList(Request $request){
-        $adds=Patients::all();
         $date = date('Y-m-d');
         date_default_timezone_set('Asia/Manila');
-        return view('patientvisit.patientvisit_list', compact('adds','date'));   
+        return view('patientvisit.patientvisit_list', compact('date'));   
     }
 
     public function patientListOption(Request $request){
-
         $patients = Patients::select('id', 'fname', 'lname', 'mname')->get();
         return response()->json(['data' => $patients]);
     }
