@@ -7,7 +7,7 @@
             <div class="small-box bg-info d-flex align-items-center justify-content-between pl-3 pr-3 pb-3 pt-3 card-curve" style="background-color: #00bc8c !important">
                 <div class="text-left">
                     <div class="inner">
-                        <h3>{{ number_format(count($patients)) }}</h3>
+                        <h3>{{ number_format($patients) }}</h3>
                         <p>Patient</p>
                     </div>
                 </div>
