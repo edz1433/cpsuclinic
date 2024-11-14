@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Patients;
 use App\Models\Medicine;
 use Illuminate\Http\Request;
-use App\Models\patientvisit;
+use App\Models\Patientvisit;
 use App\Models\File;
 use App\Models\Complaint;
 use Illuminate\Support\Facades\Log;
