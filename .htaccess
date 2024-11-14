@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirect root of public/ to public/login
+    RewriteCond %{THE_REQUEST} \s/public/?\s [NC]
+    RewriteRule ^ /cpsuclinic/public/login [L,R=301]
+
+    # Laravel's default rewrite rules
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
+</IfModule>
