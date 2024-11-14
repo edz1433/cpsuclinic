@@ -134,7 +134,7 @@
                         @csrf
                         <div class="divaddcontent">
                         <div class="page-header" style="border-bottom: 1px solid #04401f;">
-                        <button type="button" class="btn  btn-sm add-button ml-2" style="position:relative;left:90%;background-color:white" onclick="add()">
+                        <button type="button" class="btn  btn-sm add-button ml-2 times" style="position:relative;left:90%;background-color:white" onclick="add()">
                         <i class="fa fa-times" style="color:red;font-size:20px";></i> 
                         </button>
                         <h4>Add</h4>
@@ -158,8 +158,8 @@
                          <div class="form-group">
                             <div class="form-row">
                                 <div class="col-md-12">
-                                    <button type="button" class="btn btn-danger btn-sm add-button" onclick="add()">
-                                    <i class="fa fa-times"></i> Close
+                                    <button type="button"  class="btn btn-danger btn-sm add-button " onclick="add()">
+                                    <i class="fa fa-times "></i> Close
                                     </button>
                                     <button type="submit" class="btn btn-success btn-sm">
                                         <i class="fas fa-save"></i> Save
@@ -178,6 +178,18 @@
         document.getElementById("addpatientId").style.display = "none";
     }
 </script>
+
+<style type="text/css">
+    .times{
+        border: none; 
+        transition: 0.1s;
+        color
+    }
+     .times:hover{
+         transform: scale(1.1);
+         border: none; 
+     }
+</style>
 
 @endsection
 

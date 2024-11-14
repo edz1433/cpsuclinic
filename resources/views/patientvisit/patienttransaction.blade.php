@@ -7,9 +7,11 @@
             <div class="card">
                 <div class="card-body">
                     <div class="">
-                    @include('patientvisit.side_menu_patientvisit') 
+                    
                         <div class="mt-3" style="font-size: 13pt;">
                        
+                    @include('patientvisit.side_menu_patientvisit') 
+                    
                         </div>
                     </div>
                 </div>
