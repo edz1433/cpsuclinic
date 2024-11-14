@@ -14,7 +14,7 @@ class DashboardController extends Controller
 {
     public function dash()
     {
-        $patients = Patients::all();
+        $patients = Patients::limit('10')->get();
         $users = User::all();
 
         $pstudent = Patients::where('category', 1)->get();
