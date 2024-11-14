@@ -583,6 +583,8 @@ $(document).ready(function() {
     });
 });
 </script>
+
+@if(request()->is('patient/add') || request()->is('patient/moreinfo/*'))
 <script>
     // Function to get BMI category based on BMI value
     function getBMICategory(bmi) {
@@ -710,6 +712,7 @@ $(document).ready(function() {
     // Initial conversion on page load
     convertHeight();
 </script>
+@endif
 
 <script>
     $(document).ready(function() {
