@@ -124,7 +124,7 @@
 </div>
 </div>
 </div>
-</div>
+</div> 
 <div class="divmodal ml-n2 mt-n5 " style="display:none;top: 70px" onclick="closeDiv()"  id="addpatientId" > 
 <div class="justify-content-center d-flex" >
 <div class="col-md-5 mt-3 divadd"  onclick="event.stopPropagation();">

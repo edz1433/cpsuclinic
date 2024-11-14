@@ -54,7 +54,7 @@ Route::group(['middleware'=>['login_auth']],function(){
     });
   
     Route::prefix('patient-visit')->group( function(){
-        Route::get('/list', [PatientvisitController::class, 'patientvisit_list'])->name('patientvisit_list');
+        Route::get('/list', [PatientvisitController::class, 'patientvisitList'])->name('patientvisitList');
         Route::get('/patientListOption', [PatientvisitController::class, 'patientListOption'])->name('patientListOption');
         Route::get('/list/{id}', [PatientvisitController::class, 'visitSearch'])->name('visitSearch');
         Route::post('/add', [PatientvisitController::class, 'addPatient'])->name('addPatient');

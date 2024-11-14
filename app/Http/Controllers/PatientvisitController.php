@@ -9,16 +9,14 @@ use App\Models\File;
 use App\Models\Complaint;
 use Illuminate\Support\Facades\Log;
 use DB;
-
+ 
 class PatientvisitController extends Controller
 {
-    public function patientvisit_list(Request $request){
-
-        $patients = Patients::all();
+    public function patientvisitList(Request $request){
         $adds=Patients::all();
         $date = date('Y-m-d');
         date_default_timezone_set('Asia/Manila');
-        return view('patientvisit.patientvisit_list', compact('adds','date','patients'));   
+        return view('patientvisit.patientvisit_list', compact('adds','date'));   
     }
 
     public function patientListOption(Request $request){
