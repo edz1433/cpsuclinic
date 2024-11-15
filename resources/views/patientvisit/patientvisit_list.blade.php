@@ -44,15 +44,20 @@
                                 <div style="display:flex">
                                 <select id="mySelect" name="id" class="form-control mb-3 select2 form-control-sm update-field" onchange="visitSearch()" style="width:100%">
                                 <option value="">Select Patient</option>
+                                
                                 </select>
-                                @if (!isset($patientSearch))
-
-                                @else
-                                    <button type="button" class="btn btn-success btn-sm add-button ml-3" onclick="add()">
+                                @if (isset($patientSearch))
+                                    <button type="button" class="btn btn-success btn-sm add-button ml-3" data-toggle="modal" data-target="#addPatientModal">
                                         <i class="fa fa-plus"></i> 
                                     </button>
-                                    @endif
+                                @endif
                                 </div>
+                                <div class="patient-name mt-3">
+                                    <strong style="text-transform: uppercase; color: #0c62bd; letter-spacing: 1px; font-size: 25px;">
+                                        NAME: {{ strtoupper($patientSearch->lname) }} {{ strtoupper($patientSearch->fname) }} {{ strtoupper($patientSearch->mname) }}
+                                    </strong>
+                                </div>
+                                
                                 @if(isset($patientSearch))
                                 <div class="mt-3" >
                                     <table id="example2" class="table table-hover" >
@@ -127,71 +132,51 @@
 </div>
 </div>
 </div> 
-<div class="divmodal ml-n2 mt-n5 " style="display:none;top: 70px" onclick="closeDiv()"  id="addpatientId" > 
-<div class="justify-content-center d-flex" >
-<div class="col-md-5 mt-3 divadd"  onclick="event.stopPropagation();">
-            <div class="card">
-                <div class="card-body">
-                    <form method="post"  action="{{route('addPatient')}}" class="form-horizontal" >
-                        @csrf
-                        <div class="divaddcontent">
-                        <div class="page-header" style="border-bottom: 1px solid #04401f;">
-                        <button type="button" class="btn  btn-sm add-button ml-2 times" style="position:relative;left:90%;background-color:white" onclick="add()">
-                        <i class="fa fa-times" style="color:red;font-size:20px";></i> 
-                        </button>
-                        <h4>Add</h4>
-                        </div>
-                        </div>
-                        <div class="form-group mt-2">
-                            <div class="form-row"> 
+<div class="modal fade" id="addPatientModal" tabindex="-1" role="dialog" aria-labelledby="addPatientModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPatientModalLabel">Patient Record</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{{ route('addPatient') }}" class="form-horizontal">
+                    @csrf
+                    <div class="form-group mt-2">
+                        <div class="form-row">
                             @if(isset($patientSearch))
-                            <input value="{{$patientSearch->id}}" type="hidden" name="stid">
+                                <input value="{{ $patientSearch->id }}" type="hidden" name="stid">
                             @endif
-                                <div class="col-md-6">
-                                    <label class="badge badge-secondary">Date</label><br>
-                                    <input type="date" name="date" class="form-control form-control-sm" value="{{$date}}">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="badge badge-secondary">Time</label><br>
-                                   <input type="text" name="time" class="form-control form-control-sm" value="{{ date('h:i A') }}">
-                                </div>
+                            <div class="col-md-6">
+                                <label class="badge badge-secondary">Date</label><br>
+                                <input type="date" name="date" class="form-control form-control-sm" value="{{ $date }}">
                             </div>
-                        </div> 
-                         <div class="form-group">
-                            <div class="form-row">
-                                <div class="col-md-12">
-                                    <button type="button"  class="btn btn-danger btn-sm add-button " onclick="add()">
-                                    <i class="fa fa-times "></i> Close
-                                    </button>
-                                    <button type="submit" class="btn btn-success btn-sm">
-                                        <i class="fas fa-save"></i> Save
-                                    </button>
-                                  </form>
-                                </div>
+                            <div class="col-md-6">
+                                <label class="badge badge-secondary">Time</label><br>
+                                <input type="text" name="time" class="form-control form-control-sm" value="{{ date('h:i A') }}">
                             </div>
-                        </div>                      
+                        </div>
                     </div>
-                </div>
+
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">
+                                    <i class="fa fa-times"></i> Close
+                                </button>
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    <i class="fas fa-save"></i> Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>   
+                </form>
             </div>
         </div>
     </div>
-    <script>
-    function closeDiv() {
-        document.getElementById("addpatientId").style.display = "none";
-    }
-</script>
-
-<style type="text/css">
-    .times{
-        border: none; 
-        transition: 0.1s;
-        color
-    }
-     .times:hover{
-         transform: scale(1.1);
-         border: none; 
-     }
-</style>
+</div>
 
 @endsection
 

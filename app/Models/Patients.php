@@ -69,8 +69,8 @@ class Patients extends Model
         'pend_reason'
     ];
 
-    public function patientvisits()
+    public function patientVisits()
     {
-        return $this->hasMany(Patientvisit::class, 'id');
+        return $this->hasMany(Patientvisit::class, 'stid');
     }
 }

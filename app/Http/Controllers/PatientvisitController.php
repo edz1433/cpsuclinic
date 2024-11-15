@@ -18,10 +18,22 @@ class PatientvisitController extends Controller
         return view('patientvisit.patientvisit_list', compact('date'));   
     }
 
-    public function patientListOption(Request $request){
-        $patients = Patients::select('id', 'fname', 'lname', 'mname')->get();
-        return response()->json(['data' => $patients]);
+    public function patientListOption(Request $request)
+    {
+        $pageSize = 1000; // Records per batch
+        $page = $request->input('page', 1);
+    
+        $patients = Patients::select('id', 'fname', 'lname', 'mname')
+                            ->paginate($pageSize, ['*'], 'page', $page);
+    
+        return response()->json([
+            'data' => $patients->items(),
+            'pagination' => [
+                'more' => $patients->hasMorePages()
+            ]
+        ]);
     }
+    
 
     public function addPatient(Request $request){
       
@@ -63,7 +75,7 @@ class PatientvisitController extends Controller
         }
 
         $patients = Patients::select('id', 'fname', 'lname', 'mname')->get();
-        $patientSearch = Patients::select('id')->where('id', $id)->first();
+        $patientSearch = Patients::select('id', 'fname', 'lname', 'mname'   )->where('id', $id)->first();
 
         $patientVisit = Patientvisit::where('stid', $id)->get();
         return view('patientvisit.patientvisit_list', compact('patients','patientSearch','patientVisit', 'meddata','quantity','files','date'));

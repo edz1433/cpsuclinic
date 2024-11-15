@@ -879,29 +879,52 @@ $(document).ready(function() {
 </script>
 <script>
 $(document).ready(function() {
-    $.ajax({
-        url: "{{ route('patientListOption') }}", 
-        type: 'GET',
-        dataType: 'json',
-        success: function(response) {
-            let options = '<option value="">Select Patient</option>';
-            
-            // Set selected patient ID if exists
-            let selectedPatientId = {{ isset($patientSearch) ? $patientSearch->id : 'null' }};
-            
-            // Build options as a single string
-            $.each(response.data, function(index, patient) {
-                let isSelected = (selectedPatientId === patient.id) ? ' selected' : '';
-                options += `<option value="${patient.id}"${isSelected}>${patient.fname} ${patient.lname} ${patient.mname}</option>`;
-            });
+    let currentPage = 1; // Start from the first page
+    let isMoreData = true; // Keep track if there's more data to load
+    let isLoading = false; // To prevent multiple AJAX calls simultaneously
 
-            // Update the select element with options at once
-            $('#mySelect').html(options);
-        },
-        error: function() {
-            alert('Error loading patients');
-        }
-    });
+    function loadBatch() {
+        if (!isMoreData || isLoading) return; // Prevent new AJAX if already loading
+
+        isLoading = true; // Mark as loading
+
+        $.ajax({
+            url: "{{ route('patientListOption') }}",
+            type: 'GET',
+            dataType: 'json',
+            data: { page: currentPage },
+            success: function(response) {
+                let options = '';
+
+                // Append new options
+                response.data.forEach(patient => {
+                    options += `<option value="${patient.id}">${patient.fname} ${patient.lname} ${patient.mname}</option>`;
+                });
+
+                // Append all at once
+                $('#mySelect').append(options);
+
+                // Check if more data exists
+                isMoreData = response.pagination.more;
+
+                // Move to the next page if more data is available
+                if (isMoreData) {
+                    currentPage++;
+                    // Load the next batch after a small delay
+                    setTimeout(loadBatch, 200); // 200 ms delay between batches
+                }
+
+                isLoading = false; // Reset loading flag
+            },
+            error: function() {
+                alert('Error loading patients');
+                isLoading = false; // Reset loading flag on error
+            }
+        });
+    }
+
+    // Start loading batches
+    loadBatch();
 });
 </script>
 <script>
