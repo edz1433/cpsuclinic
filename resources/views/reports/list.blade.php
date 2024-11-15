@@ -29,12 +29,10 @@
                     <h4>Reports </h4>
                 </div>
                 <label class="badge badge-secondary">Search Patient:</label><br>
-                <select class="form-control form-control-sm select2" id="patient-select" name="ext_name">
-                    <option disabled selected> --Select-- </option>
-                    @foreach($patients as $p)
-                        <option value="{{ $p->id }}" @if(isset($id)) {{ ($p->id == $id) ? 'selected' : ''}} @endif>{{ strtoupper($p->lname) }} {{ strtoupper($p->fname) }} {{ strtoupper($p->mname) }}</option>
-                    @endforeach
-                </select>
+                <select id="mySelect" name="id" class="form-control mb-3 select2 form-control-sm student-report" style="width:100%">
+                    <option value="">Select Patient</option>
+                    
+                    </select>
                 <br>
                 @if(isset($id))
                     <iframe src="{{ route('peheReport', $id) }}" frameborder="0" height="1000" width="100%"></iframe>

@@ -267,7 +267,7 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#patient-select').change(function() {
+            $('.student-report').change(function() {
                 var selectedId = $(this).val();
                 if (selectedId) {
                     var url = '{{ route("reportsRead", ":id") }}';
