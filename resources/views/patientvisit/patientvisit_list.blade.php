@@ -42,23 +42,22 @@
                             <div class="col-md-12">
                                 <label class="badge badge-secondary">List of Patients</label><br>
                                 <div style="display:flex">
-                                <select id="mySelect" name="id" class="form-control mb-3 select2 form-control-sm update-field" onchange="visitSearch()" style="width:100%">
-                                <option value="">Select Patient</option>
-                                
-                                </select>
-                                @if (isset($patientSearch))
-                                    <button type="button" class="btn btn-success btn-sm add-button ml-3" data-toggle="modal" data-target="#addPatientModal">
-                                        <i class="fa fa-plus"></i> 
-                                    </button>
-                                @endif
+                                    <select id="mySelect" name="id" class="form-control mb-3 select2 form-control-sm update-field" onchange="visitSearch()" style="width:100%">
+                                    <option value="">Select Patient</option>
+                                    
+                                    </select>
+                                    @if (isset($patientSearch))
+                                        <button type="button" class="btn btn-success btn-sm add-button ml-3" data-toggle="modal" data-target="#addPatientModal">
+                                            <i class="fa fa-plus"></i> 
+                                        </button>
+                                    @endif
                                 </div>
+                                @if(isset($patientSearch))
                                 <div class="patient-name mt-3">
                                     <strong style="text-transform: uppercase; color: #0c62bd; letter-spacing: 1px; font-size: 25px;">
                                         NAME: {{ strtoupper($patientSearch->lname) }} {{ strtoupper($patientSearch->fname) }} {{ strtoupper($patientSearch->mname) }}
                                     </strong>
                                 </div>
-                                
-                                @if(isset($patientSearch))
                                 <div class="mt-3" >
                                     <table id="example2" class="table table-hover" >
                                         <thead>
