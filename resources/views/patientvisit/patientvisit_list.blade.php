@@ -46,11 +46,13 @@
                                 <option value="">Select Patient</option>
                                 </select>
                                 @if (!isset($patientSearch))
-                            @else
-                    <button type="button" class="btn btn-success btn-sm add-button ml-3" onclick="add()">
-                        <i class="fa fa-plus"></i> 
-                             </button>
-                                @endif</div>
+
+                                @else
+                                    <button type="button" class="btn btn-success btn-sm add-button ml-3" onclick="add()">
+                                        <i class="fa fa-plus"></i> 
+                                    </button>
+                                    @endif
+                                </div>
                                 @if(isset($patientSearch))
                                 <div class="mt-3" >
                                     <table id="example2" class="table table-hover" >

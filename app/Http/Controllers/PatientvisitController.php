@@ -62,15 +62,8 @@ class PatientvisitController extends Controller
             $quantity=[$data->id] =$data->qty;
         }
 
-      //gin ajax kuni nga part
-      //still fixing
-        $patients = Patients::all();    
-        $patientSearch = Patients::find($id);
-
-        if ($request->ajax()) {
-            $patientSearch = Patients::find($id);
-            return response()->json($patientSearch);
-        }
+        $patients = Patients::select('id', 'fname', 'lname', 'mname')->get();
+        $patientSearch = Patients::select('id')->where('id', $id)->first();
 
         $patientVisit = Patientvisit::where('stid', $id)->get();
         return view('patientvisit.patientvisit_list', compact('patients','patientSearch','patientVisit', 'meddata','quantity','files','date'));

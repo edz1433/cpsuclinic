@@ -884,18 +884,19 @@ $(document).ready(function() {
         type: 'GET',
         dataType: 'json',
         success: function(response) {
-            $('#mySelect').empty();
-            $('#mySelect').append('<option value="">Select Patient</option>');
+            let options = '<option value="">Select Patient</option>';
+            
+            // Set selected patient ID if exists
+            let selectedPatientId = {{ isset($patientSearch) ? $patientSearch->id : 'null' }};
+            
+            // Build options as a single string
             $.each(response.data, function(index, patient) {
-              
-                let isSelected = '';
-                @if(isset($patientSearch))
-                    if ({{ $patientSearch->id }} === patient.id) {
-                        isSelected = 'selected';
-                    }
-                @endif
-                $('#mySelect').append('<option value="' + patient.id + '" ' + isSelected + '>' + patient.fname + ' ' + patient.lname + ' ' + patient.mname + '</option>');
+                let isSelected = (selectedPatientId === patient.id) ? ' selected' : '';
+                options += `<option value="${patient.id}"${isSelected}>${patient.fname} ${patient.lname} ${patient.mname}</option>`;
             });
+
+            // Update the select element with options at once
+            $('#mySelect').html(options);
         },
         error: function() {
             alert('Error loading patients');
