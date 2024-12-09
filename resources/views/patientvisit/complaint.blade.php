@@ -11,8 +11,8 @@
                             <h4>Menu</h4>
                         </div>
                         @include('settings.settingsMenu')<br>
-                        <form method="post" action="{{ isset($complaint) ? route('complaintUpdate', ['id' => $complaint->id]) : route('complaintInsert') }}">
-                        @csrf
+                        <form action="{{ isset($complaint) ? route('complaintUpdate', ['id' => $complaint->id]) : route('complaintCreate') }}" method="POST">
+                            @csrf
                             <div class="form-group mt-2">
                                 <div class="form-row">
                                     <div class="col-md-12">
@@ -20,7 +20,7 @@
                                         <input value="{{ (isset($complaint)) ? $complaint->complaint : '' }}" type="text" name="complaint" class="form-control form-control-sm" autocomplete="off" placeholder="Complaint">
                                     </div>
                                    <br>
-                                   <button type="submit" class="btn btn-success mt-3">{{ (isset($complaint)) ? 'Update' : 'Save' }}</button>
+                                   <button id="generateBtn" type="submit" class="btn btn-success mt-3">{{ (isset($complaint)) ? 'Update' : 'Save' }}</button>
                                 </div>
                             </div>
                         </form>                 
@@ -54,11 +54,12 @@
                      @endforeach
                 </tbody>
             </table>
+            
          </div>
     </div>
 </div>
 </div>
 </div>
-</div>   
+</div>  
 @endsection
 

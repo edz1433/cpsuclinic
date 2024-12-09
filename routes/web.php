@@ -27,8 +27,10 @@ Route::group(['middleware'=>['guest']],function(){
     Route::post('/login/auth',[LoginController::class,'loginAuthenticate'])->name('postLogin');
 });
 
+
+
 Route::group(['middleware'=>['login_auth']],function(){
-    Route::get('/home',[DashboardController::class,'dash'])->name('dash');
+    Route::get('/dashboard',[DashboardController::class,'dash'])->name('dash');
     
     Route::prefix('/patient')->group(function () {
         Route::get('/patients/data/{id}', [PatientController::class, 'patientData'])->name('patients.data');
@@ -64,8 +66,6 @@ Route::group(['middleware'=>['login_auth']],function(){
         Route::post('/addItem/{id}', [PatientvisitController::class, 'patientsAddItem'])->name('addItem');
         Route::get('/remove-item/{id}', [PatientvisitController::class, 'removeItem'])->name('removeItem');
         Route::get('/Settings/{id}', [PatientvisitController::class, 'Settings'])->name('Settings');
-        
-
     });
 
     Route::prefix('test-system')->group( function(){
@@ -73,6 +73,8 @@ Route::group(['middleware'=>['login_auth']],function(){
         Route::get('test2', [PatientvisitController::class, 'test2'])->name('test2');
     });
     
+
+
     Route::prefix('/reports')->group(function (){
         Route::get('/refused', [ReportController::class,'refusedReport'])->name('refusedReport');
         Route::get('/waiver', [ReportController::class,'waiverReport'])->name('waiverReport');
@@ -107,8 +109,8 @@ Route::group(['middleware'=>['login_auth']],function(){
     
     Route::prefix('/settings')->group(function () {
         Route::get('/list/patient', [SettingsController::class,'accountRead'])->name('accountRead');
-        Route::get('/Complaint', [SettingsController::class,'Complaint'])->name('Complaint');
-        Route::post('/complaintInsert', [SettingsController::class,'complaintInsert'])->name('complaintInsert');
+        Route::get('/complaint', [SettingsController::class,'complaintRead'])->name('complaintRead');
+        Route::post('/complaintCreate', [SettingsController::class,'complaintCreate'])->name('complaintCreate');
         Route::get('/complaintEditRead/{id}', [SettingsController::class,'complaintEditRead'])->name('complaintEditRead');
         Route::post('/complaintUpdate/{id}', [SettingsController::class,'complaintUpdate'])->name('complaintUpdate');
         Route::delete('/complaint/{id}', [SettingsController::class, 'complaintDelete'])->name('complaintDelete');

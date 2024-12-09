@@ -4,15 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-
+use App\Models\Patientvisit;
 use App\Models\Medicine;
+use DB;
 
 class MedicineController extends Controller
 {
     public function  medicineRead(){
- 
+  
+      
+
         $datas = Medicine::all();
-        
         return view('medicine.medicine_list', ['datas'=>$datas]);
     }
     public function medicineInsert(Request $request){
@@ -50,6 +52,7 @@ class MedicineController extends Controller
     public function medicineEditRead($id){
         $medicine = Medicine::find($id);
         $datas = Medicine::all();
+       
      return view('medicine.medicine_list', compact('medicine','datas'));
     }
     public function medicineUpdate(Request $request){

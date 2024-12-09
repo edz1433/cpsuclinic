@@ -5,10 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Settings extends Model
+class Billing extends Model
 {
     use HasFactory;
-    protected $table ='complaint'; 
-    protected $fillable =['id','complaint'];
-
 }

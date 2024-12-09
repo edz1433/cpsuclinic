@@ -10,4 +10,10 @@ class Medicine extends Model
     use HasFactory;
      protected $fillable =['medicine','qty'];
      protected $table='medicines';  
+
+
+public function patientVisit()
+    {
+        return $this->hasMany(PatientVisit::class, 'id');
+    }
 }

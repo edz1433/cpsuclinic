@@ -5,14 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Complaint extends Model
+class History extends Model
 {
     use HasFactory;
-    
-    protected $table ='complaint'; 
-
-    protected $fillable = [
-        'complaint',
-        'colorcode', 
-    ];
+    protected $fillable=['studentID','schlyear','semester','campus','progCod', 'studYear'];
 }

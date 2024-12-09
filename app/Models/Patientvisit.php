@@ -15,5 +15,10 @@ class Patientvisit extends Model
     {
         return $this->belongstomany(Patients::class, 'id');
     } 
+
+    public function medicines()
+    {
+        return $this->belongstomany(Medicine::class, 'id');
+    }
 }
 

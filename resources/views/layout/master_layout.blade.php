@@ -136,9 +136,9 @@
 
     <script src="{{ asset('js/basic/table.js') }}"></script>
 
-    @if(request()->is('home'))
-    <!-- ChartJS -->
-    <script src="style/plugins/chart.js/Chart.min.js"></script>
+    @if(request()->is('dashboard'))
+        <!-- ChartJS -->
+        <script src="{{ asset('style/plugins/chart.js/Chart.min.js') }}"></script>
     @endif
     <script src="{{ asset('js/validation/patientValidation.js') }}"></script>
 
@@ -297,7 +297,7 @@
             select.empty();
             select.append('<option value="">Select Course</option>');
             $.each(options, function(key, value) {
-                select.append('<option value="' + value.progAcronym + '">' + value.progAcronym + '</option>');
+                select.append('<option value="' + value.progAcronym + '">' + value.progAcronym + ' - ' + value.progName +'</option>');
             });
         }
 
@@ -307,455 +307,50 @@
         });
 
     </script>
-    @if(Route::currentRouteName() == 'dash')
-    <script>
-        $(function () {
-            var donutChartCanvas = $('#donutChartPatient').get(0).getContext('2d')
-            var donutData        = {
-            labels: [
-                'Student',
-                'Employee',
-                'Guest',
-            ],
-            datasets: [
-                {
-                data: [{{ count($pstudent) }},{{ count($pemployee) }},{{ count($pguest) }}],
-                backgroundColor : ['#00a65a', '#00c0ef', '#3c8dbc'],
-                }
-            ]
-            }
-            var donutOptions     = {
-            maintainAspectRatio : false,
-            responsive : true,
-            }
 
-            var donutChartCanvas1 = $('#donutChartRemarks').get(0).getContext('2d')
-            var donutData1        = {
-            labels: [
-                'Fit for enrollment',
-                'Not fit for enrollment',
-                'Pending',
-            ],
-            datasets: [
-                {
-                data: [{{ count($remarks1) }},{{ count($remarks2) }},{{ count($remarks3) }}],
-                backgroundColor : ['#00a65a', '#00c0ef', '#3c8dbc'],
-                }
-            ]
-            }
-            var donutOptions1     = {
-            maintainAspectRatio : false,
-            responsive : true,
-            }
 
-            new Chart(donutChartCanvas, {
-                type: 'doughnut',
-                data: donutData,
-                options: donutOptions
-            })
-
-            new Chart(donutChartCanvas1, {
-                type: 'doughnut',
-                data: donutData1,
-                options: donutOptions1
-            })
-        });
-    </script>
-    @endif
 <script>
 $(document).ready(function() {
-    // Set up CSRF token for all AJAX requests
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
+    $('.medicine-delete').on('click', function() {
+        var medicineId = $(this).data('id');
 
-    // AJAX request to get provinces based on selected region
-    $('#region').change(function() {
-        var regionId = $(this).val();
-        if (regionId) {
-            $.ajax({
-                url: "{{ route('getProvinces', ['regionId' => ':regionId']) }}".replace(':regionId', regionId),
-                type: "GET",
-                dataType: "json",
-                success: function(data) {
-                    $('#province').empty();
-                    $('#province').append('<option value="">Select Province</option>');
-                    $.each(data, function(key, value) {
-                        let patientId = "{{ request()->is('patient/moreinfo/*') ? $patients->id : '' }}";
-                        $('#province').append(
-                            '<option value="' + value.province_id + 
-                            '" data-column-id="' + patientId + 
-                            '" data-column-name="home_province">' + 
-                            value.name + '</option>'
-                        );
-                    });
-                    $('#province').prop('disabled', false);
-                },
-                error: function() {
-                    $('#province').empty();
-                    $('#province').append('<option value="">Select Province</option>');
-                    $('#province').prop('disabled', true);
-                }
-            });
-        } else {
-            $('#province').empty();
-            $('#province').append('<option value="">Select Province</option>');
-            $('#province').prop('disabled', true);
-        }
-    });
+        var row = $('#tr-' + medicineId);
 
-    // AJAX request to get cities based on selected province
-    $('#province').change(function() {
-        var provinceId = $(this).val();
-        if (provinceId) {
-            $.ajax({
-                url: "{{ route('getCities', ['provinceId' => ':provinceId']) }}".replace(':provinceId', provinceId),
-                type: "GET",
-                dataType: "json",
-                success: function(data) {
-                    $('#city').empty();
-                    $('#city').append('<option value="">Select City</option>');
-                    $.each(data, function(key, value) {
-                        let patientId = "{{ request()->is('patient/moreinfo/*') ? $patients->id : '' }}";
-                        $('#city').append(
-                            '<option value="' + value.city_id + 
-                            '" data-column-id="' + patientId + 
-                            '" data-column-name="home_city">' + 
-                            value.name + '</option>'
-                        );
-                    });
-                    $('#city').prop('disabled', false);
-                },
-                error: function() {
-                    $('#city').empty();
-                    $('#city').append('<option value="">Select City</option>');
-                    $('#city').prop('disabled', true);
-                }
-            });
-        } else {
-            $('#city').empty();
-            $('#city').append('<option value="">Select City</option>');
-            $('#city').prop('disabled', true);
-        }
-    });
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = '{{ route("medicineDelete", ":id") }}'.replace(':id', medicineId);
 
-    // AJAX request to get barangays based on selected city
-    $('#city').change(function() {
-        var cityId = $(this).val();
-        if (cityId) {
-            $.ajax({
-                url: "{{ route('getBarangays', ['cityId' => ':cityId']) }}".replace(':cityId', cityId),
-                type: "GET",
-                dataType: "json",
-                success: function(data) {
-                    $('#barangay').empty();
-                    $('#barangay').append('<option value="">Select Barangay</option>');
-                    $.each(data, function(key, value) {
-                        let patientId = "{{ request()->is('patient/moreinfo/*') ? $patients->id : '' }}";
-                        $('#barangay').append(
-                            '<option value="' + value.id + 
-                            '" data-column-id="' + patientId + 
-                            '" data-column-name="home_brgy">' + 
-                            value.name + '</option>'
-                        );
-                    });
-                    $('#barangay').prop('disabled', false);
-                },
-                error: function() {
-                    $('#barangay').empty();
-                    $('#barangay').append('<option value="">Select Barangay</option>');
-                    $('#barangay').prop('disabled', true);
-                }
-            });
-        } else {
-            $('#barangay').empty();
-            $('#barangay').append('<option value="">Select Barangay</option>');
-            $('#barangay').prop('disabled', true);
-        }
-    });
-
-
-    // AJAX request to get provinces based on selected region
-    $('#region1').change(function() {
-        var regionId = $(this).val();
-        if (regionId) {
-            $.ajax({
-                url: "{{ route('getProvinces', ['regionId' => ':regionId']) }}".replace(':regionId', regionId),
-                type: "GET",
-                dataType: "json",
-                success: function(data) {
-                    $('#province1').empty();
-                    $('#province1').append('<option value="">Select Province</option>');
-                    $.each(data, function(key, value) {
-                        let patientId = "{{ request()->is('patient/moreinfo/*') ? $patients->id : '' }}";
-                        $('#province1').append(
-                            '<option value="' + value.province_id + 
-                            '" data-column-id="' + patientId + 
-                            '" data-column-name="guardian_province">' + 
-                            value.name + '</option>'
-                        );
-                    });
-                    $('#province1').prop('disabled', false);
-                },
-                error: function() {
-                    $('#province1').empty();
-                    $('#province1').append('<option value="">Select Province</option>');
-                    $('#province1').prop('disabled', true);
-                }
-            });
-        } else {
-            $('#province1').empty();
-            $('#province1').append('<option value="">Select Province</option>');
-            $('#province1').prop('disabled', true);
-        }
-    });
-
-    // AJAX request to get cities based on selected province
-    $('#province1').change(function() {
-        var provinceId = $(this).val();
-        if (provinceId) {
-            $.ajax({
-                url: "{{ route('getCities', ['provinceId' => ':provinceId']) }}".replace(':provinceId', provinceId),
-                type: "GET",
-                dataType: "json",
-                success: function(data) {
-                    $('#city1').empty();
-                    $('#city1').append('<option value="">Select City</option>');
-                    $.each(data, function(key, value) {
-                        let patientId = "{{ request()->is('patient/moreinfo/*') ? $patients->id : '' }}";
-                        $('#city1').append(
-                            '<option value="' + value.city_id + 
-                            '" data-column-id="' + patientId + 
-                            '" data-column-name="guardian_city">' + 
-                            value.name + '</option>'
-                        );
-                    });
-                    $('#city1').prop('disabled', false);
-                },
-                error: function() {
-                    $('#city1').empty();
-                    $('#city1').append('<option value="">Select City</option>');
-                    $('#city1').prop('disabled', true);
-                }
-            });
-        } else {
-            $('#city1').empty();
-            $('#city1').append('<option value="">Select City</option>');
-            $('#city1').prop('disabled', true);
-        }
-    });
-
-    // AJAX request to get barangays based on selected city
-    $('#city1').change(function() {
-        var cityId = $(this).val();
-        if (cityId) {
-            $.ajax({
-                url: "{{ route('getBarangays', ['cityId' => ':cityId']) }}".replace(':cityId', cityId),
-                type: "GET",
-                dataType: "json",
-                success: function(data) {
-                    $('#barangay1').empty();
-                    $('#barangay1').append('<option value="">Select Barangay</option>');
-                    $.each(data, function(key, value) {
-                        let patientId = "{{ request()->is('patient/moreinfo/*') ? $patients->id : '' }}";
-                        $('#barangay1').append(
-                            '<option value="' + value.id + 
-                            '" data-column-id="' + patientId + 
-                            '" data-column-name="guardian_brgy">' + 
-                            value.name + '</option>'
-                        );
-                    });
-                    $('#barangay1').prop('disabled', false);
-                },
-                error: function() {
-                    $('#barangay1').empty();
-                    $('#barangay1').append('<option value="">Select Barangay</option>');
-                    $('#barangay1').prop('disabled', true);
-                }
-            });
-        } else {
-            $('#barangay1').empty();
-            $('#barangay1').append('<option value="">Select Barangay</option>');
-            $('#barangay1').prop('disabled', true);
-        }
-    });
-});
-</script>
-
-@if(request()->is('patient/add') || request()->is('patient/moreinfo/*'))
-<script>
-    // Function to get BMI category based on BMI value
-    function getBMICategory(bmi) {
-        if (bmi < 16.0) {
-            document.getElementById('bmi_cat').value = "Severely Underweight";    
-        } else if (bmi >= 16.0 && bmi <= 18.4) {
-            document.getElementById('bmi_cat').value = "Underweight";
-        } else if (bmi >= 18.5 && bmi <= 24.9) {
-            document.getElementById('bmi_cat').value = "Normal";
-        } else if (bmi >= 25.0 && bmi <= 29.9) {
-            document.getElementById('bmi_cat').value = "Overweight";
-        } else if (bmi >= 30.0 && bmi <= 34.9) {
-            document.getElementById('bmi_cat').value = "Moderately Obese";
-        } else if (bmi >= 35.0 && bmi <= 39.9) {
-            document.getElementById('bmi_cat').value = "Severely Obese";
-        } else if (bmi >= 40.0) {
-            document.getElementById('bmi_cat').value = "Morbidly Obese";
-        } else {
-            document.getElementById('bmi_cat').value = ''; 
-        }
-    }
-
-    $(document).ready(function() {
-        setInterval(function() {
-            const bmiValue = parseFloat(document.getElementById('bmi').value); 
-            getBMICategory(bmiValue);
-        }, 100); 
-    });
-</script>
-<script>
-    // Function to calculate BMI
-    function calculateBMI(weightKg, heightM) {
-        if (weightKg && heightM) {
-            var bmi = weightKg / (heightM * heightM);
-            return bmi.toFixed(1); // Round BMI to one decimal point
-        } else {
-            return ""; // Return empty string if either value is missing
-        }
-    }
-    
-    // Convert height from centimeters to feet and inches
-    function convertHeight() {
-        var cm = parseFloat(document.getElementById('height_cm').value);
-        if (!isNaN(cm)) {
-            var totalInches = cm / 2.54;
-            var feet = Math.floor(totalInches / 12);
-            var inches = Math.round(totalInches % 12); // Round inches to nearest whole number
-            var formattedHeight = feet + "'" + inches + '"';
-            document.getElementById('height_ft').value = formattedHeight;
-
-            // Calculate BMI
-            var weightKg = parseFloat(document.getElementById('weight_kg').value);
-            var heightM = cm / 100; // Convert cm to meters for BMI calculation
-            var bmi = calculateBMI(weightKg, heightM);
-            document.getElementById('bmi').value = bmi; // Display BMI
-        } else {
-            document.getElementById('height_ft').value = '';
-            document.getElementById('bmi').value = ''; // Clear BMI if height is N/A
-        }
-    }
-
-    // Convert height from feet and inches to centimeters
-    function convertHeightToFtIn() {
-        var heightFt = document.getElementById('height_ft').value;
-        if (heightFt) {
-            var feet = parseFloat(heightFt.split("'")[0]);
-            var inches = parseFloat(heightFt.split("'")[1].replace('"', ''));
-            var totalInches = feet * 12 + inches;
-            var cm = totalInches * 2.54;
-            document.getElementById('height_cm').value = Math.round(cm); // Round cm to nearest whole number
-
-            // Calculate BMI
-            var weightKg = parseFloat(document.getElementById('weight_kg').value);
-            var heightM = cm / 100; // Convert cm to meters for BMI calculation
-            var bmi = calculateBMI(weightKg, heightM);
-            document.getElementById('bmi').value = bmi; // Display BMI
-        } else {
-            document.getElementById('height_cm').value = '';
-            document.getElementById('bmi').value = ''; // Clear BMI if height is N/A
-        }
-    }
-
-    // Event listener for height in centimeters
-    document.getElementById('height_cm').addEventListener('input', function() {
-        convertHeight();
-    });
-
-    // Event listener for height in feet and inches
-    document.getElementById('height_ft').addEventListener('input', function() {
-        convertHeightToFtIn();
-    });
-
-    // Event listener for weight in kilograms
-    document.getElementById('weight_kg').addEventListener('input', function() {
-        var weightKg = parseFloat(this.value);
-        if (!isNaN(weightKg)) {
-            var weightLb = weightKg * 2.20462;
-            document.getElementById('weight_lb').value = Math.round(weightLb); // Round weight in pounds
-        } else {
-            document.getElementById('weight_lb').value = '';
-        }
-
-        // Calculate BMI
-        var heightCm = parseFloat(document.getElementById('height_cm').value);
-        var bmi = calculateBMI(weightKg, heightCm / 100); // Convert cm to meters for BMI calculation
-        document.getElementById('bmi').value = bmi; // Display BMI
-    });
-
-    // Event listener for weight in pounds
-    document.getElementById('weight_lb').addEventListener('input', function() {
-        var weightLb = parseFloat(this.value);
-        if (!isNaN(weightLb)) {
-            var weightKg = weightLb / 2.20462;
-            document.getElementById('weight_kg').value = Math.round(weightKg); // Round weight in kilograms
-        } else {
-            document.getElementById('weight_kg').value = '';
-        }
-
-        // Calculate BMI
-        var heightCm = parseFloat(document.getElementById('height_cm').value);
-        var bmi = calculateBMI(weightKg, heightCm / 100); // Convert cm to meters for BMI calculation
-        document.getElementById('bmi').value = bmi; // Display BMI
-    });
-
-    // Initial conversion on page load
-    convertHeight();
-</script>
-@endif
-
-<script>
-    $(document).ready(function() {
-        $('.medicine-delete').on('click', function() {
-            var medicineId = $(this).data('id');
-
-            var row = $('#tr-' + medicineId);
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var url = '{{ route("medicineDelete", ":id") }}'.replace(':id', medicineId);
-
-                    $.ajax({
-                        url: url,
-                        type: 'delete',
-                        success: function(response) {
-                            console.log("Server response:", response);
-                            if(response.status == 200) {
-                                row.fadeOut(500, function() {
-                                    $(this).remove();
-                                });
-                                Swal.fire({
-                                    title: 'Deleted!',
-                                    text: 'The record has been deleted.',
-                                    icon: 'success',
-                                    timer: 2000,
-                                    showConfirmButton: false
-                                });
-                            } 
-                        }
-                    });
-                }
-            });
+                $.ajax({
+                    url: url,
+                    type: 'delete',
+                    success: function(response) {
+                        console.log("Server response:", response);
+                        if(response.status == 200) {
+                            row.fadeOut(500, function() {
+                                $(this).remove();
+                            });
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: 'The record has been deleted.',
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        } 
+                    }
+                });
+            }
         });
     });
+});
 </script>
 <script>
 $(document).ready(function() {
@@ -877,56 +472,7 @@ $(document).ready(function() {
     link.href = '{{ asset('transac/transaction1.css') }}'; 
     document.head.appendChild(link);
 </script>
-<script>
-$(document).ready(function() {
-    let currentPage = 1; // Start from the first page
-    let isMoreData = true; // Keep track if there's more data to load
-    let isLoading = false; // To prevent multiple AJAX calls simultaneously
 
-    function loadBatch() {
-        if (!isMoreData || isLoading) return; // Prevent new AJAX if already loading
-
-        isLoading = true; // Mark as loading
-
-        $.ajax({
-            url: "{{ route('patientListOption') }}",
-            type: 'GET',
-            dataType: 'json',
-            data: { page: currentPage },
-            success: function(response) {
-                let options = '';
-
-                // Append new options
-                response.data.forEach(patient => {
-                    options += `<option value="${patient.id}">${patient.fname} ${patient.lname} ${patient.mname}</option>`;
-                });
-
-                // Append all at once
-                $('#mySelect').append(options);
-
-                // Check if more data exists
-                isMoreData = response.pagination.more;
-
-                // Move to the next page if more data is available
-                if (isMoreData) {
-                    currentPage++;
-                    // Load the next batch after a small delay
-                    setTimeout(loadBatch, 200); // 200 ms delay between batches
-                }
-
-                isLoading = false; // Reset loading flag
-            },
-            error: function() {
-                alert('Error loading patients');
-                isLoading = false; // Reset loading flag on error
-            }
-        });
-    }
-
-    // Start loading batches
-    loadBatch();
-});
-</script>
 <script>
 function add() {
     const addpatient = document.getElementById('addpatientId');
@@ -944,76 +490,18 @@ function add() {
         document.getElementById("addpatientId").style.display = "none";
     }
 </script>
-@isset($id)
-<script>
-$(document).ready(function() {
-    $('.patients-data').DataTable({
-        "ajax": "{{ route('patients.data', ['id' => $id]) }}",
-        responsive: true,
-        lengthChange: true,
-        searching: true,
-        paging: true,
-        "columns": [
-            { data: 'id'},
-            { data: 'full_name'},
-            { data: 'age' },
-            { data: 'sex' },
-            { data: 'c_status' },   
-            @if($id == 1)
-            { 
-                data: 'pexam_remarks', 
-                render: function(data, type, row) {
-                    if (data === 1) {
-                        return '<span class="badge badge-success">Fit for enrollment</span>';
-                    } else if (data === 2) {
-                        return '<span class="badge badge-danger">Not fit for enrollment</span>';
-                    } else if (data === 3) {
-                        return `<span class="badge badge-warning" data-toggle="tooltip" title="${row.pend_reason}">Pending</span>`;
-                    } else {
-                        return '';
-                    }
-                }
-            },
-            @endif
-            {
-                data: 'id',
-                render: function(data, type, row) {
-                    var moreInfoUrl = "{{ route('moreInfo', ['id' => ':category', 'mid' => ':id']) }}".replace(':category', row.category).replace(':id', data);
-                    var fileReadUrl = "{{ route('fileRead', ['cat' => ':category', 'id' => ':id']) }}".replace(':category', row.category).replace(':id', data);
-                    var reportsReadUrl = "{{ route('reportsRead', ':id') }}".replace(':id', data);
-                    
-                    return `
-                        <div class="btn-group">
-                            <a href="${moreInfoUrl}" class="mr-1 btn btn-info btn-sm text-light" title="More Info">
-                                <i class="fas fa-exclamation-circle"></i> 
-                            </a>
-                            <a href="${fileReadUrl}" class="mr-1 btn btn-success btn-sm" title="File Info">
-                                <i class="fas fa-file"></i> 
-                            </a>
-                            <a href="${reportsReadUrl}" class="mr-1 btn btn-warning btn-sm" title="Pre-Entrance Health Examination Report">
-                                <i class="fas fa-file-pdf"></i> 
-                            </a>
-                            <button class="mr-1 btn btn-danger btn-sm patient-delete" data-id="${data}" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    `;
-                }
-            }
-        ],
-        initComplete: function(settings, json) {
-            var api = this.api();
-            api.column(0, {search: 'applied', order: 'applied'}).nodes().each(function(cell, i) {
-                cell.innerHTML = i + 1;
-            });
-        },
-        "createdRow": function (row, data, dataIndex) {
-            $(row).attr('id', 'tr-' + data.id);
-        }
-    });
-});
-</script>
-@endisset
-@include('script.patientVisitScript')
+
+@if(request()->is('patient/list/1'))
+    @include('script.patientListScipt')
+@endif
+@if(request()->is('patient-visit/*'))
+    @include('script.patientVisitScript')
+@endif
+@if(request()->is('patient/add') || request()->is('patient/moreinfo/*'))
+    @include('script.patientScript')
+@endif
+@if(request()->is('dashboard'))
+    @include('script.dashboardScript')
+@endif
 </body>
 </html>

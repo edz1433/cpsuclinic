@@ -185,7 +185,7 @@
                                     <select class="form-control form-control-sm select2" name="studCollege" id="collegeSelect">
                                         <option disabled selected> --Select-- </option>
                                         @foreach($col as $college)
-                                            <option value="{{ $college->college_abbr }}">{{ $college->college_name }}</option>
+                                            <option value="{{ $college }}">{{ $college }}</option>
                                         @endforeach
                                     </select>
                                 </div>

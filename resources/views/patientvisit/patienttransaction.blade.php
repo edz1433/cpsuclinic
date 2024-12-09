@@ -7,10 +7,9 @@
             <div class="card">
                 <div class="card-body">
                     <div class="">
-                    
                         <div class="mt-3" style="font-size: 13pt;">
                        
-                    @include('patientvisit.side_menu_patientvisit') 
+                            @include('patientvisit.side_menu_patientvisit') 
                     
                         </div>
                     </div>
@@ -151,33 +150,33 @@
                 </div> 
         <script>
      document.addEventListener('DOMContentLoaded', () => {
-    // Initialize Select2 for all select elements with the 'select2' class
+ 
     $('.select2').select2({
-        width: '100%'  // Set Select2 width to 100% to ensure it matches the container
+        width: '100%'  
     });
 
-    // Function to apply consistent width to all select elements with 'update-field' class
+   
     function setSelectWidth() {
         const selects = document.querySelectorAll('.update-field');
         selects.forEach(select => {
-            select.style.width = '100%';  // Ensures each select takes full width of its parent container
+            select.style.width = '100%';  
         });
     }
 
-    // Call the function initially to set width for existing selects
+   
     setSelectWidth();
 
-    // Function to toggle visibility of the Remove button
+    
     function toggleRemoveButton() {
         const rows = document.querySelectorAll('#dynamic-fields .row');
         const removeButton = document.getElementById('myremove');
         removeButton.style.display = rows.length > 1 ? 'inline-block' : 'none';
     }
 
-    // Initial call to set the button visibility
+  
     toggleRemoveButton();
 
-    // Event listener for the Add button
+  
     document.querySelector('.add-button').addEventListener('click', function () {
         const dynamicFieldsContainer = document.getElementById('dynamic-fields');
         const newRow = document.createElement('div');
@@ -199,32 +198,32 @@
             </div>
         `;
 
-        // Append the new row to the container
+      
         dynamicFieldsContainer.appendChild(newRow);
 
-        // Reinitialize Select2 for the new select element
+   
         $(newRow).find('.select2').select2({
             width: '100%'
         });
 
-        // Apply consistent width to all select elements
+      
         setSelectWidth();
 
-        // Update Remove button visibility
+      
         toggleRemoveButton();
     });
 
-    // Event listener for the Remove button
+   
     document.getElementById('myremove').addEventListener('click', function () {
         const dynamicFieldsContainer = document.getElementById('dynamic-fields');
         const rows = dynamicFieldsContainer.getElementsByClassName('row');
 
-        // Only remove if there’s more than one row
+      
         if (rows.length > 1) {
             dynamicFieldsContainer.removeChild(rows[rows.length - 1]);
         }
 
-        // Update Remove button visibility after removing a row
+      
         toggleRemoveButton();
     });
 });

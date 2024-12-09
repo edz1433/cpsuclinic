@@ -11,7 +11,7 @@ use App\Models\Province;
 use App\Models\City;
 use App\Models\Barangay;
 use App\Models\Patients;
-use App\Models\College;
+use App\Models\Program;
 use App\Models\Course;
 use App\Models\Office;
 use Illuminate\Support\Facades\DB;
@@ -22,16 +22,20 @@ class PatientController extends Controller
     public function patientAdd() 
     {
         $regions = Region::all();
-        $col = College::where('campus', '=', Auth::user()->campus)->get();
+        $col = Program::where('campus', Auth::user()->campus)
+        ->distinct()
+        ->pluck('progCollege');
+
         $patients = Patients::all();
         
         $offices = Office::all();
         return view('patient.patient_add', compact('col', 'patients', 'offices', 'regions'));
     }
+    
 
     public function patientRead($id) 
     {
-        $col = College::where('campus', '=', Auth::user()->campus)->get();
+        $col = Program::where('campus', '=', Auth::user()->campus)->get();
        // $patients = Patients::where('category', $id)->get();
         $patients = Patients::where('category', $id)->limit(10)->get();
 
@@ -50,7 +54,11 @@ class PatientController extends Controller
 
     public function moreInfo($id, $mid){
         $regions = Region::all();
-        $col = College::where('campus', '=', Auth::user()->campus)->get();
+        
+        $col = Program::where('campus', Auth::user()->campus)
+        ->distinct()
+        ->pluck('progCollege');
+
         $patients = Patients::find($mid);
         $hprovinces = Province::where('region_id', $patients->home_region)->get();
         $hcities = City::where('city_id', $patients->home_city)->get();
@@ -148,7 +156,43 @@ class PatientController extends Controller
     
         return redirect()->back()->with('success', 'Added Successfully');
     }
+
+    public function getJsonData($studid)
+    {
+        $data = [
+            'stud_id' => '2501-0691-G',
+            'fname' => 'Edwin',
+            'mname' => 'Trio',
+            'lname' => 'Abril',
+            'ext_name' => 'Jr',
+            'birthdate' => '2003-06-17',
+            'age' => '21',
+            'sex' => 'Male',
+            'contact' => '09063084301',
+            'c_status' => 'Single',
+            'studCollege' => 'progCollege',
+            'studCourse' => 'progAcronym',
+            'yearLevel' => '1',
+            'guardian' => 'Phebe Abril',
+        ];
+        
+        $response = Http::post('http://localhost/cpsuclinic/public/patient/create-json', [
+            'data' => json_encode($data)
+        ]);
     
+        return $response->json();
+    }
+    
+    public function createJson(Request $request)
+    {
+        $jsonData = $request->query('data');
+
+        $data = json_decode($jsonData, true);
+
+        Patient::create($data);
+
+        return view('patient.create', ['data' => $data]);
+    }
 
     public function patientUpdate(Request $request)
     {
@@ -195,7 +239,7 @@ class PatientController extends Controller
     {
         $selectedCampus = $request->input('campus');
 
-        $college = College::where('campus', $selectedCampus)->get();
+        $college = Program::where('campus', $selectedCampus)->get();
 
         return response()->json(['college' => $college]);
     }
@@ -204,7 +248,7 @@ class PatientController extends Controller
     {
         $selectedCollege = $request->input('studCollege');
 
-        $course = Course::where('progCollege', $selectedCollege)->get();
+        $course = Program::where('progCollege', $selectedCollege)->get();
 
         return response()->json(['course' => $course]);
     }
@@ -219,7 +263,7 @@ class PatientController extends Controller
                 'uid' => $id,
             ]);
         }
-    
+        
         return response()->json([
             'status' => 404,
             'message' => 'Patient not found',
