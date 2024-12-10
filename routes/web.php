@@ -27,8 +27,6 @@ Route::group(['middleware'=>['guest']],function(){
     Route::post('/login/auth',[LoginController::class,'loginAuthenticate'])->name('postLogin');
 });
 
-
-
 Route::group(['middleware'=>['login_auth']],function(){
     Route::get('/dashboard',[DashboardController::class,'dash'])->name('dash');
     

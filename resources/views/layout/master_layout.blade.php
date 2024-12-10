@@ -494,7 +494,7 @@ function add() {
 @if(request()->is('patient/list/1'))
     @include('script.patientListScipt')
 @endif
-@if(request()->is('patient-visit/*'))
+@if(request()->is('patient-visit/*') || request()->is('reports/*'))
     @include('script.patientVisitScript')
 @endif
 @if(request()->is('patient/add') || request()->is('patient/moreinfo/*'))

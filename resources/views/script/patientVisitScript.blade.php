@@ -40,10 +40,10 @@ function visitSearch() {
                     response.data.forEach(patient => {
                         options += `<option value="${patient.id}">${patient.fname} ${patient.lname} ${patient.mname}</option>`;
                     });
-    
+                    
                     // Append all at once
                     $('#mySelect').append(options);
-    
+                    
                     // Check if more data exists
                     isMoreData = response.pagination.more;
     

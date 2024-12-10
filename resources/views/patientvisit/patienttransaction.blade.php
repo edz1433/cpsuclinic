@@ -1,6 +1,19 @@
 
 @extends('layout.master_layout')
 @section('body')
+
+<style>
+   .select-multiple {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: black;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 8px;
+  width: 200px;
+  height: 120px; /* Adjust for multiple options */
+}
+</style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-3">
@@ -34,24 +47,28 @@
                                                     <label class="badge badge-secondary">Patient Name</label><br>
                                                     <input type="text"  readonly class="form-control form-control-sm" value="{{$data->fname}} {{$data->lname}} {{$data->mname}}">
                                                 </div>                            
-                                                <div class="col-md-4">
+                                                <div class="col-md-6">
                                                     <label class="badge badge-secondary ">Date</label><br>
                                                     <input type="date" name="date" class="form-control form-control-sm" value="{{ \Carbon\Carbon::parse($data->date)->format('Y-m-d') }}">
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-6">
                                                     <label class="badge badge-secondary ">Time</label><br>
                                                     <input type="text" name="time"  class="form-control form-control-sm" value="{{$data->time}}">
                                                 </div>
-                                                <div class="col-md-4 mt-n1">
-                                                    <label class="badge badge-secondary  mt-2">Chief Complaint</label><br>
-                                                    <select  name="chief_complaint" class="form-select select2 form-control-sm update-field">
+                                                <div class="col-md-12 mt-n1">
+                                                <label class="badge badge-secondary mt-2">Chief Complaint</label><br>
+                                                <select name="chief_complaint[]" class="form-select select2 form-control-sm update-field" multiple>
+                                                    @php
+                                                        $chiefComplaints = explode(',', $data->chief_complaint);
+                                                    @endphp
                                                     @foreach($complaints as $complaint)
-                                                    <option value="{{ $complaint->id }}" {{ $data->chief_complaint == $complaint->id ? 'selected' : '' }}>
-                                                    {{ $complaint->complaint }}
-                                                     </option>
+                                                        <option style="color:black" value="{{ $complaint->id }}" 
+                                                            {{ in_array($complaint->id, $chiefComplaints) ? 'selected' : '' }}>
+                                                            {{ $complaint->complaint }}
+                                                        </option>
                                                     @endforeach
-                                                    </select>
-                                                </div>
+                                                </select>
+                                            </div>
                                                 <div class="col-md-12">
                                                 <label class="badge badge-secondary mt-2">Treatment</label><br>
                                                     <textarea class="form-control smooth-gray-placeholder" name="treatment" rows="7">{{$data->treatment}}</textarea>
